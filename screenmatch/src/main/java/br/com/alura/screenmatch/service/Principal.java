@@ -63,11 +63,31 @@ public class Principal {
                 .limit(10)
                 .forEach(System.out::println);
 
-//        List<Episodios> episodio = listaTemporadas.stream()
-//                .flatMap(t -> t.episodios().stream())
-//                .map(d -> new Episodios(d.numero(), d))
-//                .collect(Collectors.toList());
-//        episodio.forEach(System.out::println);
+        List<Episodios> episodio = listaTemporadas.stream()
+                .flatMap(t -> t.episodios().stream())
+                .map(d -> new Episodios(d.numero(), d))
+                .collect(Collectors.toList());
+        episodio.forEach(System.out::println);
+
+
+        System.out.println("Digite um trecho do titulo do episódio:");
+        var trechoTitulo = sc.nextLine();
+        Optional<Episodios> first = episodio.stream()
+                .filter(e -> e.getTitle().toUpperCase().contains(trechoTitulo.toUpperCase()))
+                .findFirst();
+        if (first.isPresent()) {
+            System.out.println("Episódio encontrado!");
+            System.out.println("Temporada: " + first.get().getTemporada());
+        }else{
+            System.out.println("Episódio não encontrado");
+        }
+
+
+        Map<Integer, Double> avaliacaoTemporada = episodio.stream()
+                .filter(e -> e.getAvaliacao() > 0.0)
+                .collect(Collectors.groupingBy(Episodios::getTemporada, Collectors.averagingDouble(Episodios::getAvaliacao)));
+
+        System.out.println(avaliacaoTemporada);
 //
 //
 //
