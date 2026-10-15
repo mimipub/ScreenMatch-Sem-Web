@@ -70,17 +70,17 @@ public class Principal {
         episodio.forEach(System.out::println);
 
 
-        System.out.println("Digite um trecho do titulo do episódio:");
-        var trechoTitulo = sc.nextLine();
-        Optional<Episodios> first = episodio.stream()
-                .filter(e -> e.getTitle().toUpperCase().contains(trechoTitulo.toUpperCase()))
-                .findFirst();
-        if (first.isPresent()) {
-            System.out.println("Episódio encontrado!");
-            System.out.println("Temporada: " + first.get().getTemporada());
-        }else{
-            System.out.println("Episódio não encontrado");
-        }
+//        System.out.println("Digite um trecho do titulo do episódio:");
+//        var trechoTitulo = sc.nextLine();
+//        Optional<Episodios> first = episodio.stream()
+//                .filter(e -> e.getTitle().toUpperCase().contains(trechoTitulo.toUpperCase()))
+//                .findFirst();
+//        if (first.isPresent()) {
+//            System.out.println("Episódio encontrado!");
+//            System.out.println("Temporada: " + first.get().getTemporada());
+//        }else{
+//            System.out.println("Episódio não encontrado");
+//        }
 
 
         Map<Integer, Double> avaliacaoTemporada = episodio.stream()
@@ -88,7 +88,18 @@ public class Principal {
                 .collect(Collectors.groupingBy(Episodios::getTemporada, Collectors.averagingDouble(Episodios::getAvaliacao)));
 
         System.out.println(avaliacaoTemporada);
-//
+
+//        Coletando estatisticas
+        DoubleSummaryStatistics est = episodio.stream()
+                .filter(e -> e.getAvaliacao() > 0.0)
+                .collect(Collectors.summarizingDouble(Episodios::getAvaliacao));
+
+        String mensagem = "Média: " + est.getAverage() + "\n" +
+                "Melhor avaliação de Episodio: " + est.getMax() + "\n" +
+                "pior avaliação de Episodio: " + est.getMin() + "\n" +
+                "quantidade de episodios: " + est.getCount();
+
+        System.out.println(mensagem);
 //
 //
 ////        busca a partir de determinada data
